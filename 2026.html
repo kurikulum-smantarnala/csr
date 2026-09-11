@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekapitulasi Skor Penilaian Nala CSR</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+
+        /* FREEZE COLUMNS */
+        .sticky-left { position: sticky; left: 0; z-index: 20; background-color: #ffffff; }
+        th.sticky-left { background-color: #f9fafb; z-index: 30; }
+        .sticky-right { position: sticky; right: 0; z-index: 20; background-color: #f0f9ff; }
+        th.sticky-right { background-color: #e0f2fe; z-index: 30; }
+
+        .sticky-left::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 2px; background-color: #e5e7eb; }
+        .sticky-right::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px; background-color: #bae6fd; }
+
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        @media print {
+            @page { size: A4 portrait; margin: 12mm 10mm; }
+            body { background: white !important; color: black !important; font-size: 10pt; }
+            .no-print { display: none !important; }
+            .print-full-width { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+            .shadow-sm { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
+            .chart-container { max-height: 220px !important; }
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; }
+            thead { display: table-header-group; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; }
+            .sticky-left, .sticky-right { position: static !important; }
+        }
+        .print-header { display: none; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto print-full-width">
+        <!-- HEADER PRINT -->
+        <div class="print-header">
+            <h1 class="text-2xl font-bold text-gray-800">REKAPITULASI SKOR PENILAIAN NALA CSR</h1>
+            <p class="text-sm text-gray-600">Laporan Hasil Penilaian Kebersihan & Keamanan Sarpas</p>
+            <p class="text-xs text-gray-500 mt-1" id="print-date-range">Periode: -</p>
+        </div>
+
+        <!-- HEADER WEB & NAVIGATION -->
+        <div class="no-print bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                        <i class="fa-solid fa-chart-column text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Rekapitulasi Skor Penilaian Nala CSR</h1>
+                        <p class="text-sm text-gray-500">Dashboard Hasil Pemantauan & Evaluasi Sarpas Kelas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs text-gray-400 mr-2 flex items-center gap-1">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> Auto-refresh 2m
+                </span>
+                <button onclick="fetchData()" id="btn-refresh" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                    <i class="fa-solid fa-rotate-right" id="refresh-icon"></i> Refresh
+                </button>
+                <button onclick="window.print()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm shadow-sm transition-all">
+                    <i class="fa-solid fa-print"></i> Cetak A4
+                </button>
+            </div>
+        </div>
+
+        <!-- FILTER RENTANG TANGGAL -->
+        <div class="no-print bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-6">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <div class="flex-1">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tanggal Mulai</label>
+                    <input type="date" id="startDate" class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tanggal Selesai</label>
+                    <input type="date" id="endDate" class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-end">
+                    <button onclick="applyFilter()" class="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 text-sm font-medium rounded-xl transition-all h-[38px]">
+                        <i class="fa-solid fa-filter mr-1"></i> Terapkan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTU JUARA PER JENJANG -->
+        <div class="mb-6">
+            <h2 class="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-trophy text-amber-500"></i> Nilai Tertinggi Per Jenjang
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-2xl border border-amber-200/60 shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-2 -bottom-2 text-amber-200/50 text-6xl"><i class="fa-solid fa-award"></i></div>
+                    <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">Jenjang Kelas X</span>
+                    <h3 class="text-2xl font-extrabold text-gray-800" id="top-x-class">-</h3>
+                    <p class="text-sm text-gray-600 mt-1">Total Skor: <span class="font-bold text-amber-700 text-lg" id="top-x-score">0</span></p>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl border border-blue-200/60 shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-2 -bottom-2 text-blue-200/50 text-6xl"><i class="fa-solid fa-medal"></i></div>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">Jenjang Kelas XI</span>
+                    <h3 class="text-2xl font-extrabold text-gray-800" id="top-xi-class">-</h3>
+                    <p class="text-sm text-gray-600 mt-1">Total Skor: <span class="font-bold text-blue-700 text-lg" id="top-xi-score">0</span></p>
+                </div>
+
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-200/60 shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-2 -bottom-2 text-emerald-200/50 text-6xl"><i class="fa-solid fa-crown"></i></div>
+                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">Jenjang Kelas XII</span>
+                    <h3 class="text-2xl font-extrabold text-gray-800" id="top-xii-class">-</h3>
+                    <p class="text-sm text-gray-600 mt-1">Total Skor: <span class="font-bold text-emerald-700 text-lg" id="top-xii-score">0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRAFIK SEBARAN TOTAL SKOR -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+            <h2 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-chart-bar text-blue-600"></i> Sebaran Total Skor Per Kelas
+            </h2>
+            <div class="chart-container relative h-[260px] w-full">
+                <canvas id="scoreChart"></canvas>
+            </div>
+        </div>
+
+        <!-- TABEL DATA MATRIKS HARIAN -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <h2 class="text-base font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-table-list text-gray-600"></i> Matriks Rekapitulasi Skor Per Hari
+                </h2>
+                <div class="no-print w-full sm:w-64">
+                    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari kelas..." class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <div class="overflow-x-auto custom-scrollbar border border-gray-200 rounded-xl">
+                <table class="w-full text-left border-collapse min-w-[800px]" id="dataTable">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider" id="tableHeader"></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm text-gray-700" id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FOOTER PRINT -->
+        <div class="print-header mt-8 text-xs text-gray-400 border-t border-gray-200 pt-3">
+            Dicetak secara otomatis dari Dashboard Nala CSR pada <span id="print-timestamp"></span>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxopF0Wmeb8gqeTtlARO2dH2lMo9pXN0Z9rGw54qG4n0qG5qRE1R0Mjb0cXlMWdlPR2/exec';
+        
+        let rawData = [];
+        let myChart = null;
+        let isInitialLoad = true;
+
+        // Fungsi format tanggal ke YYYY-MM-DD
+        function formatDateToYYYYMMDD(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Atur default: Tanggal 1 Bulan ini & Hari ini
+        function setDefaultDates() {
+            const today = new Date();
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            document.getElementById('startDate').value = formatDateToYYYYMMDD(firstDayOfMonth);
+            document.getElementById('endDate').value = formatDateToYYYYMMDD(today);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setDefaultDates(); // Set filter awal otomatis saat DOM siap
+            fetchData();
+            setInterval(fetchData, 120000); // Refresh otomatis 2 menit
+        });
+
+        async function fetchData() {
+            const refreshIcon = document.getElementById('refresh-icon');
+            refreshIcon.classList.add('fa-spin');
+
+            try {
+                const response = await fetch(WEB_APP_URL);
+                if (!response.ok) throw new Error('Gagal terhubung');
+                
+                const data = await response.json();
+                
+                // Peta data agar isoDate terisi dengan aman (Fallback jika backend menyalurkan format DD/MM)
+                const currentYear = new Date().getFullYear();
+                rawData = data.map(item => {
+                    let iso = item.isoDate;
+                    if (!iso && item.tanggal) {
+                        const parts = item.tanggal.split('/');
+                        if (parts.length === 2) {
+                            iso = `${currentYear}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                        } else {
+                            iso = item.tanggal;
+                        }
+                    }
+                    return { ...item, isoDate: iso };
+                });
+
+                applyFilter();
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                refreshIcon.classList.remove('fa-spin');
+            }
+        }
+
+        function applyFilter() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            
+            document.getElementById('print-date-range').innerText = `Periode: ${start || '-'} s/d ${end || '-'}`;
+            document.getElementById('print-timestamp').innerText = new Date().toLocaleString('id-ID');
+
+            const filtered = rawData.filter(item => {
+                if (!start && !end) return true;
+                if (start && !end) return item.isoDate >= start;
+                if (!start && end) return item.isoDate <= end;
+                return item.isoDate >= start && item.isoDate <= end;
+            });
+
+            const aggregated = {};
+            filtered.forEach(item => {
+                if (!aggregated[item.kelas]) aggregated[item.kelas] = 0;
+                aggregated[item.kelas] += Number(item.skor);
+            });
+
+            updateTopCards(aggregated);
+            updateChart(aggregated);
+            updateTableMatrix(filtered);
+        }
+
+        function updateTopCards(aggregated) {
+            let topX = { kelas: '-', skor: 0 };
+            let topXI = { kelas: '-', skor: 0 };
+            let topXII = { kelas: '-', skor: 0 };
+
+            for (const [kelas, skor] of Object.entries(aggregated)) {
+                if (kelas.startsWith('X-') && skor > topX.skor) topX = { kelas, skor };
+                else if (kelas.startsWith('XI-') && skor > topXI.skor) topXI = { kelas, skor };
+                else if (kelas.startsWith('XII-') && skor > topXII.skor) topXII = { kelas, skor };
+            }
+
+            document.getElementById('top-x-class').innerText = topX.kelas;
+            document.getElementById('top-x-score').innerText = topX.skor;
+            document.getElementById('top-xi-class').innerText = topXI.kelas;
+            document.getElementById('top-xi-score').innerText = topXI.skor;
+            document.getElementById('top-xii-class').innerText = topXII.kelas;
+            document.getElementById('top-xii-score').innerText = topXII.skor;
+        }
+
+        function updateChart(aggregated) {
+            const labels = Object.keys(aggregated).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+            const data = labels.map(k => aggregated[k]);
+
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            if (myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Skor',
+                        data: data,
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 8,
+                        barThickness: 32
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 300 },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function updateTableMatrix(data) {
+            const thead = document.getElementById('tableHeader');
+            const tbody = document.getElementById('tableBody');
+
+            if (data.length === 0) {
+                thead.innerHTML = `<th class="py-3 px-4">Kelas</th>`;
+                tbody.innerHTML = `<tr><td class="py-4 text-center text-gray-400">Tidak ada data pada rentang tanggal ini.</td></tr>`;
+                return;
+            }
+
+            const dateMap = {};
+            data.forEach(item => {
+                dateMap[item.isoDate] = item.tanggal;
+            });
+            
+            const sortedIsoDates = Object.keys(dateMap).sort();
+
+            let headerHTML = `<th class="py-3 px-4 font-bold text-gray-700 border-b sticky-left min-w-[100px]">Kelas</th>`;
+            sortedIsoDates.forEach(iso => {
+                headerHTML += `<th class="py-3 px-4 text-center border-b whitespace-nowrap min-w-[80px]">${dateMap[iso]}</th>`;
+            });
+            headerHTML += `<th class="py-3 px-4 text-right font-bold text-blue-700 border-b sticky-right min-w-[130px]">Total Skor</th>`;
+            thead.innerHTML = headerHTML;
+
+            const matrix = {};
+            data.forEach(item => {
+                if (!matrix[item.kelas]) matrix[item.kelas] = {};
+                if (!matrix[item.kelas][item.isoDate]) matrix[item.kelas][item.isoDate] = 0;
+                matrix[item.kelas][item.isoDate] += Number(item.skor);
+            });
+
+            const sortedClasses = Object.keys(matrix).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+
+            let bodyHTML = '';
+            sortedClasses.forEach(kelas => {
+                bodyHTML += `<tr class="hover:bg-gray-50/80 transition-colors">`;
+                bodyHTML += `<td class="py-3 px-4 font-bold text-gray-800 border-b sticky-left">${kelas}</td>`;
+                
+                let totalPerKelas = 0;
+                sortedIsoDates.forEach(iso => {
+                    const skor = matrix[kelas][iso] || 0;
+                    totalPerKelas += skor;
+                    
+                    const displaySkor = skor > 0 
+                        ? `<span class="font-semibold text-gray-700">${skor}</span>` 
+                        : `<span class="text-gray-300">-</span>`;
+                        
+                    bodyHTML += `<td class="py-3 px-4 text-center border-b">${displaySkor}</td>`;
+                });
+
+                bodyHTML += `<td class="py-3 px-4 text-right font-bold text-blue-600 border-b sticky-right">${totalPerKelas}</td>`;
+                bodyHTML += `</tr>`;
+            });
+
+            tbody.innerHTML = bodyHTML;
+        }
+
+        function filterTable() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const classCell = rows[i].getElementsByTagName('td')[0];
+                if (classCell) {
+                    const textValue = classCell.textContent || classCell.innerText;
+                    rows[i].style.display = textValue.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
