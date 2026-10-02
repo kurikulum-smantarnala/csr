@@ -9,52 +9,59 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      /* Background Overlay Gradasi Biru Tua & Biru Samudra dengan Gambar Unsplash */
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(2, 132, 199, 0.85)),
+                  url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+      background-size: cover;
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex items-center justify-center p-2 sm:p-6">
+<body class="min-h-screen flex flex-col justify-between p-2 sm:p-6">
 
   <!-- MAIN CARD CONTAINER -->
-  <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden my-2 sm:my-6">
+  <div class="w-full max-w-5xl bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-blue-100 overflow-hidden my-2 sm:my-6 mx-auto">
     
-    <!-- HEADER -->
-    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 p-5 sm:p-6 text-white text-center relative shadow-md">
+    <!-- HEADER (Gradasi Biru) -->
+    <div class="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 p-5 sm:p-6 text-white text-center relative shadow-md border-b border-blue-700/50">
       <div class="flex justify-center mb-3">
         <img src="https://lh3.googleusercontent.com/d/1erlU3Wwr8NuIusv6FXvG3qahEv7D1eQL" alt="Logo SMAN Taruna Nala" class="w-16 h-16 sm:w-20 sm:h-20 object-contain filter drop-shadow-md">
       </div>
       
-      <span class="px-3 py-1 bg-white/10 text-blue-200 text-[10px] sm:text-xs font-bold rounded-full border border-white/20 uppercase tracking-wider mb-2 inline-block backdrop-blur-sm">
+      <span class="px-3 py-1 bg-blue-500/20 text-blue-200 text-[10px] sm:text-xs font-bold rounded-full border border-blue-300/30 uppercase tracking-wider mb-2 inline-block backdrop-blur-sm">
         SMA Negeri Taruna Nala Jawa Timur
       </span>
-      <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight leading-snug">JURNAL NALA-CLEAN, SAFETY-FACILITIES, & RESPECT (NALA-CSR)</h1>
-      <p class="text-[11px] sm:text-sm text-blue-100/80 mt-1 font-medium">Sistem Rekapitulasi Penilaian Kebersihan & Kepedulian Kelas</p>
+      <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight leading-snug text-white drop-shadow">JURNAL NALA-CLEAN, SAFETY-FACILITIES, & RESPECT (NALA-CSR)</h1>
+      <p class="text-[11px] sm:text-sm text-blue-200/90 mt-1 font-medium">Sistem Rekapitulasi Penilaian Kebersihan & Kepedulian Kelas</p>
     </div>
 
     <!-- 1. LOGIN SECTION -->
     <div id="loginSection" class="p-6 sm:p-12 max-w-md mx-auto space-y-6">
       <div class="text-center space-y-1">
         <h2 class="text-xl font-bold text-slate-900">Selamat Datang, Bapak/Ibu Guru</h2>
-        <p class="text-xs text-slate-500">Silakan login untuk mengisi jurnal penilaian kelas</p>
+        <p class="text-xs text-blue-600/80 font-medium">Silakan login untuk mengisi jurnal penilaian kelas</p>
       </div>
 
       <div class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
           <div class="relative">
-            <i data-lucide="user" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
-            <input type="text" id="userInput" placeholder="Masukkan Username..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 transition">
+            <i data-lucide="user" class="w-4 h-4 absolute left-3 top-3 text-blue-500"></i>
+            <input type="text" id="userInput" placeholder="Masukkan Username..." class="w-full bg-blue-50/50 border border-blue-200 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 transition">
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
           <div class="relative">
-            <i data-lucide="lock" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
-            <input type="password" id="passInput" placeholder="Masukkan Password..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 transition">
+            <i data-lucide="lock" class="w-4 h-4 absolute left-3 top-3 text-blue-500"></i>
+            <input type="password" id="passInput" placeholder="Masukkan Password..." class="w-full bg-blue-50/50 border border-blue-200 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 transition">
           </div>
         </div>
 
-        <button onclick="doLogin()" id="btnLogin" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-700/25 active:scale-[0.98]">
+        <button onclick="doLogin()" id="btnLogin" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-700/30 active:scale-[0.98]">
           <span>Login Sistem</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -67,13 +74,13 @@
     <div id="formSection" class="hidden p-4 sm:p-8 space-y-6">
       
       <!-- USER INFO BAR -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3.5 sm:p-4 rounded-xl border border-slate-200">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-blue-50/60 p-3.5 sm:p-4 rounded-xl border border-blue-100">
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600/10 border border-blue-600/20 flex items-center justify-center text-blue-700 font-bold shrink-0">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shrink-0 shadow-md shadow-blue-600/20">
             <i data-lucide="user-check" class="w-5 h-5"></i>
           </div>
           <div>
-            <p class="text-[11px] sm:text-xs font-medium text-slate-500">Guru Penilai:</p>
+            <p class="text-[11px] sm:text-xs font-medium text-blue-600">Guru Penilai:</p>
             <p id="guruName" class="text-xs sm:text-sm font-bold text-slate-800"></p>
           </div>
         </div>
@@ -83,48 +90,46 @@
       </div>
 
       <!-- FILTER & SETTING JAM MENGAJAR -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 bg-slate-50/80 p-3.5 sm:p-4.5 rounded-xl border border-slate-200">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 bg-blue-50/40 p-3.5 sm:p-4.5 rounded-xl border border-blue-100">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Mengajar</label>
-          <input type="date" id="tglInput" onchange="onClassOrDateChange()" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-600 outline-none shadow-sm">
+          <input type="date" id="tglInput" onchange="onClassOrDateChange()" class="w-full bg-white border border-blue-200 rounded-lg p-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-600 outline-none shadow-sm">
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Kelas</label>
-          <select id="kelasInput" onchange="onClassOrDateChange()" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-600 outline-none shadow-sm">
-            
-          <option value="">-- Pilih Kelas --</option>
-          <!-- KELAS X -->
-          <option value="X-1">X-1</option>
-          <option value="X-2">X-2</option>
-          <option value="X-3">X-3</option>
-          <option value="X-4">X-4</option>
-          <option value="X-5">X-5</option>
-          <option value="X-6">X-6</option>
-          <!-- KELAS XI -->
-          <option value="XI-1">XI-1</option>
-          <option value="XI-2">XI-2</option>
-          <option value="XI-3">XI-3</option>
-          <option value="XI-4">XI-4</option>
-          <option value="XI-5">XI-5</option>
-          <option value="XI-6">XI-6</option>
-          <option value="XI-7">XI-7</option>
-          <option value="XI-8">XI-8</option>
-          <!-- KELAS XII -->
-          <option value="XII-1">XII-1</option>
-          <option value="XII-2">XII-2</option>
-          <option value="XII-3">XII-3</option>
-          <option value="XII-4">XII-4</option>
-          <option value="XII-5">XII-5</option>
-          <option value="XII-6">XII-6</option>
-          <option value="XII-7">XII-7</option>
-
+          <select id="kelasInput" onchange="onClassOrDateChange()" class="w-full bg-white border border-blue-200 rounded-lg p-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-600 outline-none shadow-sm">
+            <option value="">-- Pilih Kelas --</option>
+            <!-- KELAS X -->
+            <option value="X-1">X-1</option>
+            <option value="X-2">X-2</option>
+            <option value="X-3">X-3</option>
+            <option value="X-4">X-4</option>
+            <option value="X-5">X-5</option>
+            <option value="X-6">X-6</option>
+            <!-- KELAS XI -->
+            <option value="XI-1">XI-1</option>
+            <option value="XI-2">XI-2</option>
+            <option value="XI-3">XI-3</option>
+            <option value="XI-4">XI-4</option>
+            <option value="XI-5">XI-5</option>
+            <option value="XI-6">XI-6</option>
+            <option value="XI-7">XI-7</option>
+            <option value="XI-8">XI-8</option>
+            <!-- KELAS XII -->
+            <option value="XII-1">XII-1</option>
+            <option value="XII-2">XII-2</option>
+            <option value="XII-3">XII-3</option>
+            <option value="XII-4">XII-4</option>
+            <option value="XII-5">XII-5</option>
+            <option value="XII-6">XII-6</option>
+            <option value="XII-7">XII-7</option>
           </select>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Jumlah JP Mengajar Hari Ini</label>
-          <select id="jumlahJpInput" onchange="generateScoreCards()" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-600 outline-none shadow-sm">
+          <select id="jumlahJpInput" onchange="generateScoreCards()" class="w-full bg-white border border-blue-200 rounded-lg p-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-600 outline-none shadow-sm">
             <option value="1">1 JP</option>
             <option value="2">2 JP</option>
             <option value="3">3 JP</option>
@@ -148,11 +153,11 @@
         <!-- CATATAN TAMBAHAN -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Catatan Tambahan Guru (Opsional)</label>
-          <textarea id="catatan" rows="2" placeholder="Tuliskan catatan kondisi kelas jika ada..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-800 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 outline-none transition"></textarea>
+          <textarea id="catatan" rows="2" placeholder="Tuliskan catatan kondisi kelas jika ada..." class="w-full bg-blue-50/30 border border-blue-200 rounded-xl p-3 text-xs text-slate-800 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 outline-none transition"></textarea>
         </div>
 
-        <!-- SUBMIT BUTTON -->
-        <button onclick="submitForm()" id="btnSubmit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-[0.99]">
+        <!-- SUBMIT BUTTON (Biru) -->
+        <button onclick="submitForm()" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 active:scale-[0.99]">
           <i data-lucide="send" class="w-4 h-4"></i>
           <span>Kirim Penilaian Jurnal</span>
         </button>
@@ -165,19 +170,19 @@
 
   <!-- MODAL POPUP MODERN -->
   <div id="customModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden transition-opacity">
-    <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full p-6 text-center space-y-5">
-      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+    <div class="bg-white rounded-2xl shadow-2xl border border-blue-100 max-w-md w-full p-6 text-center space-y-5">
+      <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
         <i data-lucide="check-circle-2" class="w-10 h-10"></i>
       </div>
       <div class="space-y-2">
         <h3 class="text-xl font-extrabold text-slate-900">Penilaian Berhasil Disimpan!</h3>
         <p class="text-xs text-slate-500 leading-relaxed">Seluruh data penilaian jurnal kelas telah tercatat ke sistem Google Spreadsheet secara otomatis.</p>
       </div>
-      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
+      <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 text-xs font-semibold text-blue-900">
         Apakah Anda ingin melanjutkan pengisian untuk kelas lain?
       </div>
       <div class="grid grid-cols-2 gap-3 pt-1">
-        <button onclick="handleModalChoice('repeat')" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5">
+        <button onclick="handleModalChoice('repeat')" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300 py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5">
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Isi Kelas Lain
         </button>
         <button onclick="handleModalChoice('logout')" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-md">
@@ -187,6 +192,11 @@
     </div>
   </div>
 
+  <!-- FOOTER (Biru Transparan) -->
+  <footer class="w-full text-center py-4 px-2 text-blue-100/80 text-xs bg-slate-900/50 backdrop-blur-md mt-6 border-t border-blue-500/20">
+    <p>&copy; SMAN Taruna Nala Jawa Timur | Nala-CSR System</p>
+  </footer>
+
   <!-- JAVASCRIPT LOGIC -->
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzPVu4ncRWQKbUbATjxBLH2sfD-0a7Z6PuLTwRdZFUUi9uR4rz1CtlP118Q-ec4evSymA/exec";
@@ -194,25 +204,26 @@
     let currentUser = {};
     let currentFilledHours = [];
 
+    // Indikator kategori diubah ke skema warna bernuansa Biru
     const indicatorsData = [
-      { category: 'A. CLEAN (Kebersihan & Kerapian)', color: 'blue', items: [
+      { category: 'A. CLEAN (Kebersihan & Kerapian)', color: 'darkblue', items: [
         { key: 'c1', title: '1. Kebersihan Bangunan & Mebel', desc: 'Kebersihan lantai dalam, teras, lemari, meja, kursi, papan tulis, pintu, jendela (Bersih dari sampah)' },
         { key: 'c2', title: '2. Kerapian & Keindahan', desc: 'Penataan meja kursi guru & siswa, alat kebersihan, hiasan kelas, lemari' }
       ]},
-      { category: 'B. SAFETY-FACILITIES (Keamanan & Kelengkapan)', color: 'emerald', items: [
+      { category: 'B. SAFETY-FACILITIES (Keamanan & Kelengkapan)', color: 'blue', items: [
         { key: 's1', title: '1. KBM Aman dan Tertib', desc: 'Kegiatan belajar mengajar berlangsung dalam suasana yang aman dan tertib. (tidak terjadi pertengkaran, perundungan, dan diskriminasi dll)' },
         { key: 's2', title: '2. Kelas Aman', desc: 'Ruang kelas bebas dari kondisi yang berpotensi membahayakan warga kelas' },
         { key: 's3', title: '3. Kepatuhan Terhadap Tata Tertib', desc: 'Murid mematuhi tata tertib dan prosedur keselamatan selama pembelajaran' },
         { key: 's4', title: '4. Alat Kebersihan', desc: 'Keberadaan & kebersihan alat kebersihan (sapu, kemoceng, cikrak)' },
         { key: 's5', title: '5. Alat Tulis Pembelajaran', desc: 'Keberadaan alat tulis kelas (spidol, penghapus, penggaris, papan pengumuman, dll)' }
       ]},
-      { category: 'C. RESPECT (Sikap & Perilaku)', color: 'amber', items: [
+      { category: 'C. RESPECT (Sikap & Perilaku)', color: 'skyblue', items: [
         { key: 'r1', title: '1. Menghormati Guru', desc: 'Menghormati guru mengajar (tidak tidur, tidak gaduh, tidak menghambat KBM)' },
         { key: 'r2', title: '2. Menghormati Teman', desc: 'Saling menghormati dan menghargai teman sesama kelas' }
       ]}
     ];
 
-    // FUNGSI KHUSUS FORMANTING TANGGAL JAKARTA (WIB)
+    // FUNGSI KHUSUS FORMATTING TANGGAL JAKARTA (WIB)
     function getJakartaDateString() {
       const options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' };
       const formatter = new Intl.DateTimeFormat('en-CA', options);
@@ -285,7 +296,7 @@
         return;
       }
 
-      statusBox.className = 'p-3.5 sm:p-4 rounded-xl text-xs sm:text-sm font-semibold flex items-start gap-3 bg-slate-100 border border-slate-300 text-slate-700';
+      statusBox.className = 'p-3.5 sm:p-4 rounded-xl text-xs sm:text-sm font-semibold flex items-start gap-3 bg-blue-50 border border-blue-200 text-blue-900';
       statusBox.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin text-blue-600 shrink-0"></i> Memeriksa status jam kelas ${kelas}...`;
       statusBox.classList.remove('hidden');
       lucide.createIcons();
@@ -325,14 +336,15 @@
       let html = '';
 
       indicatorsData.forEach(cat => {
-        const bgHead = cat.color === 'blue' ? 'bg-blue-900' : cat.color === 'emerald' ? 'bg-emerald-800' : 'bg-amber-800';
+        // Judul baris indikator dengan variasi warna biru
+        const bgHead = cat.color === 'darkblue' ? 'bg-slate-900' : cat.color === 'blue' ? 'bg-blue-800' : 'bg-sky-800';
         
         html += `
-          <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+          <div class="border border-blue-100 rounded-xl overflow-hidden bg-white shadow-sm">
             <div class="${bgHead} text-white px-4 py-2.5 font-extrabold text-xs sm:text-sm tracking-wide">
               ${cat.category}
             </div>
-            <div class="divide-y divide-slate-100">
+            <div class="divide-y divide-blue-50">
         `;
 
         cat.items.forEach(item => {
@@ -348,10 +360,9 @@
 
           selectedJp.forEach(jp => {
             html += `
-              <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex sm:flex-col justify-between items-center gap-2">
+              <div class="bg-blue-50/50 p-2.5 rounded-lg border border-blue-100 flex sm:flex-col justify-between items-center gap-2">
                 <span class="text-[11px] font-bold text-blue-900 uppercase">Jam Ke-${jp}</span>
-                <select data-indicator="${item.key}" data-jp="${jp}" class="score-select w-2/3 sm:w-full bg-white border border-slate-300 text-emerald-700 font-extrabold rounded-lg p-2 text-xs text-center outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition">
-                  
+                <select data-indicator="${item.key}" data-jp="${jp}" class="score-select w-2/3 sm:w-full bg-white border border-blue-200 text-blue-700 font-extrabold rounded-lg p-2 text-xs text-center outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition">
                   <option value="3" selected>3 (Baik)</option>
                   <option value="2">2 (Cukup)</option>
                   <option value="1">1 (Kurang)</option>
